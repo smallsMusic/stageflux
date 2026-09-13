@@ -188,13 +188,14 @@
   .services{border-bottom:1px solid var(--line);}
   .channel-list{display:flex; flex-direction:column; border-top:1px solid var(--line);}
   .channel-row{
-    display:grid; grid-template-columns:90px 1fr 1.4fr; gap:24px;
+    display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.4fr); gap:24px;
     padding:26px 0; border-bottom:1px solid var(--line);
     align-items:baseline;
   }
-  .channel-num{font-family:'Oswald', sans-serif; color:var(--amber); font-size:1rem; letter-spacing:.03em;}
-  .channel-name{font-weight:700; font-size:1.08rem;}
-  .channel-desc{color:var(--ink-dim); font-size:.92rem;}
+  .channel-title{margin:0; color:var(--amber); font-weight:700; font-size:1.08rem; line-height:1.6; overflow-wrap:anywhere;}
+  .channel-desc{color:var(--ink-dim); font-size:.92rem; min-width:0;}
+  .channel-desc p{margin:0 0 10px;}
+  .channel-desc p:last-child{margin-bottom:0;}
   @media (max-width:760px){
     .channel-row{grid-template-columns:1fr; gap:6px;}
   }
@@ -267,8 +268,8 @@
 
 <section class="hero" id="top">
   <p class="hero-eyebrow">STAGE LIGHTING &amp; PROGRAMMING</p>
-  <h1>무대를<br>흐르게 <span>하다</span></h1>
-  <p>공연, 축제, 대학행사를 위한 무대조명 전문 팀 STAGE FLUX입니다.<br>조명 디자인부터 DMX 프로그래밍까지, 전국 어디든 출장 가능합니다.</p>
+  <h1>빛으로 디자인하는 <br><span>완벽한 순간</span></h1>
+  <p>무대의 흐름을 읽는 섬세한 감각과 정교한 타이밍으로 가장 아름다운 시각적 미학을 완성합니다.<br>공연 · 축제 · 행사를 위한 전문 무대조명 팀 STAGE FLUX 입니다.</p>
   <div class="hero-actions">
     <a href="#contact" class="btn btn-primary">DM으로 문의하기</a>
     <a href="#services" class="btn btn-ghost">서비스 보기</a>
@@ -281,9 +282,10 @@
       <p class="section-head" style="margin-bottom:0;">
         <span class="kicker" style="display:block;">ABOUT</span>
       </p>
-      <p style="color:var(--ink); font-size:1.15rem; font-weight:600; margin-bottom:20px;">공연·축제·대학행사 무대조명 전문</p>
-      <p>조명은 무대 위 순간을 완성하는 마지막 디테일입니다. STAGE FLUX는 공연장의 규모와 성격에 맞춰 조명 디자인부터 장비 세팅, DMX 큐 프로그래밍까지 전 과정을 직접 진행합니다.</p>
-      <p>대학 축제, 콘서트, 행사 조명까지 — 무대가 있는 곳이라면 전국 어디든 출장 가능합니다.</p>
+      <p style="color:var(--ink); font-size:1.15rem; font-weight:600; margin-bottom:20px;">공연·축제·행사 무대조명 전문</p>
+      <p>조명은 무대 위 순간을 완성하는 가장 아름다운 디테일입니다.</p>
+      <p>STAGE FLUX는 무대의 규모와 연출 성격에 맞춰 조명 디자인부터 장비 세팅, DMX 큐 프로그래밍까지 전 과정을 직접 다루는 전문 무대조명 팀입니다.</p>
+      <p>섬세한 감각과 정교한 타이밍으로 연출의 흐름을 정밀하게 읽어내며, 공연, 대학 축제, 각종 행사까지 무대가 있는 곳이라면 전국 어디든 가능합니다</p>
     </div>
     <ul class="info-list">
       <li><b>Lighting Director</b><span>도병철 (<a href="https://www.instagram.com/stage_flux/" target="_blank" rel="noopener">@stage_flux</a>)</span></li>
@@ -303,24 +305,32 @@
   </div>
   <div class="channel-list">
     <div class="channel-row">
-      <span class="channel-num disp">CH 01</span>
-      <span class="channel-name">공연 조명 디자인</span>
-      <span class="channel-desc">콘서트, 밴드 공연을 위한 무대조명 플랜 설계 및 연출</span>
+      <h3 class="channel-title">무대 조명 디자인 &amp; 연출 (Lighting Design)</h3>
+      <div class="channel-desc">
+        <p>공연, 축제, 행사 성격에 맞춘 시각적 컬러 스키마 및 입체적 픽스처 레이아웃 설계</p>
+        <p>BSW 빔/스팟, Wash, B-Eye, LED STROBE, LED 블라인더 등 최적의 조명 연출 기획</p>
+      </div>
     </div>
     <div class="channel-row">
-      <span class="channel-num disp">CH 02</span>
-      <span class="channel-name">축제 / 행사 조명</span>
-      <span class="channel-desc">지역 축제, 기업 행사 등 야외·실내 행사 조명 세팅</span>
+      <h3 class="channel-title">라이브 오퍼레이팅 (Live Operating)</h3>
+      <div class="channel-desc">
+        <p>현장의 호흡과 정밀하게 반응하는 음악적·감각적 디테일 큐ing</p>
+        <p>리허설부터 본 무대까지 완벽한 씬 제어 및 돌발 상황 즉각 대응</p>
+      </div>
     </div>
     <div class="channel-row">
-      <span class="channel-num disp">CH 03</span>
-      <span class="channel-name">대학행사 조명</span>
-      <span class="channel-desc">대학 축제, 동아리 공연 등 대학 행사 전용 조명 패키지</span>
+      <h3 class="channel-title">조명 시스템 시공 &amp; 인프라 구축 (Lighting Installation)</h3>
+      <div class="channel-desc">
+        <p>공연장, 합주실, 스튜디오, 행사 공간 등 맞춤형 조명 시스템 설계 및 시공</p>
+        <p>안정적인 DMX 신호 라인 배선, 전력 분전반 및 바텐/트러스 인프라 구축</p>
+      </div>
     </div>
     <div class="channel-row">
-      <span class="channel-num disp">CH 04</span>
-      <span class="channel-name">DMX 프로그래밍</span>
-      <span class="channel-desc">큐 시트 작성부터 실시간 조명 큐 프로그래밍까지 진행</span>
+      <h3 class="channel-title">장비 렌탈 &amp; 현장 세팅 (Equipment Rental &amp; Setup)</h3>
+      <div class="channel-desc">
+        <p>최적의 상태로 유지 관리되는 전문 조명 장비 렌탈</p>
+        <p>현장 구조와 환경을 고려한 안전한 설치, 픽스처 튜닝 및 테크니컬 지원</p>
+      </div>
     </div>
   </div>
 </section>
