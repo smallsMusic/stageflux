@@ -55,6 +55,35 @@
   }
   a{color:inherit;}
   [id]{scroll-margin-top:88px;}
+
+  /* ---------- scroll to top ---------- */
+  .scroll-top{
+    position:fixed;
+    bottom:28px; right:28px;
+    z-index:70;
+    width:48px; height:48px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--bg-2);
+    color:var(--ink);
+    font-size:1.3rem;
+    line-height:1;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,0.35);
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(12px);
+    transition:opacity .25s ease, transform .25s ease, background .2s ease, color .2s ease;
+  }
+  .scroll-top.visible{
+    opacity:1; visibility:visible; transform:translateY(0);
+  }
+  .scroll-top:hover{
+    background:var(--amber); color:#181410; border-color:transparent;
+  }
+  @media (max-width:600px){
+    .scroll-top{width:42px; height:42px; bottom:18px; right:18px; font-size:1.1rem;}
+  }
   .disp{font-family:'Oswald', sans-serif;}
 
   /* ---------- header ---------- */
@@ -204,7 +233,6 @@
   footer a{color:var(--amber); text-decoration:none;}
 
   @media (max-width:860px){
-    nav ul{display:none;}
     .nav-toggle{display:flex;}
     nav#site-nav{
       display:block; position:absolute; top:100%; left:0; right:0;
@@ -224,7 +252,7 @@
 <body>
 
 <header>
-  <a href="#top" class="brand"><img src="images/logo-wordmark.jpg" alt="STAGE FLUX 로고" style="height:40px;"></a>
+  <a href="#top" class="brand"><img src="images/logo-header.png" alt="STAGE FLUX 로고" style="height:38px;"></a>
   <nav id="site-nav">
     <ul>
       <li><a href="#about">소개</a></li>
@@ -258,7 +286,7 @@
       <p>대학 축제, 콘서트, 행사 조명까지 — 무대가 있는 곳이라면 전국 어디든 출장 가능합니다.</p>
     </div>
     <ul class="info-list">
-      <li><b>Lighting Director</b><span>도병철 (<a href="https://www.instagram.com/do_drum/" target="_blank" rel="noopener">@do_drum</a>)</span></li>
+      <li><b>Lighting Director</b><span>도병철 (<a href="https://www.instagram.com/stage_flux/" target="_blank" rel="noopener">@stage_flux</a>)</span></li>
       <li><b>활동 지역</b><span>전국 공연 / 행사 조명</span></li>
       <li><b>문의 방법</b><span>전화, 이메일 또는 인스타그램 DM</span></li>
       <li><b>이메일</b><span><a href="mailto:stageflux01@gmail.com">stageflux01@gmail.com</a></span></li>
@@ -350,7 +378,26 @@
   <span>© 2026 STAGE FLUX. All rights reserved.</span>
 </footer>
 
+<button id="scroll-top" class="scroll-top" aria-label="맨 위로 이동">↑</button>
+
 <script>
+  (function initScrollTop(){
+    const btn = document.getElementById('scroll-top');
+    if(!btn) return;
+    function toggle(){
+      if(window.scrollY > 400){
+        btn.classList.add('visible');
+      }else{
+        btn.classList.remove('visible');
+      }
+    }
+    window.addEventListener('scroll', toggle, {passive:true});
+    toggle();
+    btn.addEventListener('click', function(){
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  })();
+
   (function initNavToggle(){
     const btn = document.getElementById('nav-toggle');
     const nav = document.getElementById('site-nav');
