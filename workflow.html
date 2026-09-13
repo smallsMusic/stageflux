@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WORKFLOW | STAGE FLUX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Pretendard';
+    src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2');
+    font-weight:400; font-display:swap;
+    unicode-range:U+AC00-D7A3, U+1100-11FF, U+3130-318F, U+A960-A97F, U+D7B0-D7FF;
+  }
+  @font-face{
+    font-family:'Pretendard';
+    src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Medium.woff2') format('woff2');
+    font-weight:500; font-display:swap;
+    unicode-range:U+AC00-D7A3, U+1100-11FF, U+3130-318F, U+A960-A97F, U+D7B0-D7FF;
+  }
+  @font-face{
+    font-family:'Pretendard';
+    src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-SemiBold.woff2') format('woff2');
+    font-weight:600; font-display:swap;
+    unicode-range:U+AC00-D7A3, U+1100-11FF, U+3130-318F, U+A960-A97F, U+D7B0-D7FF;
+  }
+  @font-face{
+    font-family:'Pretendard';
+    src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Bold.woff2') format('woff2');
+    font-weight:700; font-display:swap;
+    unicode-range:U+AC00-D7A3, U+1100-11FF, U+3130-318F, U+A960-A97F, U+D7B0-D7FF;
+  }
+
+  :root{
+    --bg:#15171b;
+    --bg-2:#1e2126;
+    --bg-3:#25282e;
+    --line:#2d3038;
+    --ink:#f2f1ec;
+    --ink-dim:#9a9da3;
+    --amber:#d5713c;
+    --amber-dim:#3d2c22;
+    --violet:#7b86e8;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Pretendard','Noto Sans KR',sans-serif;
+    line-height:1.65;
+  }
+  a{color:inherit;}
+  [id]{scroll-margin-top:88px;}
+
+  /* ---------- scroll to top ---------- */
+  .scroll-top{
+    position:fixed;
+    bottom:28px; right:28px;
+    z-index:70;
+    width:48px; height:48px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--bg-2);
+    color:var(--ink);
+    font-size:1.3rem;
+    line-height:1;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,0.35);
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(12px);
+    transition:opacity .25s ease, transform .25s ease, background .2s ease, color .2s ease;
+  }
+  .scroll-top.visible{
+    opacity:1; visibility:visible; transform:translateY(0);
+  }
+  .scroll-top:hover{
+    background:var(--amber); color:#181410; border-color:transparent;
+  }
+  @media (max-width:600px){
+    .scroll-top{width:42px; height:42px; bottom:18px; right:18px; font-size:1.1rem;}
+  }
+  .disp{font-family:'Oswald', sans-serif;}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 6vw;
+    background:rgba(21,23,27,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
+  .brand img{height:34px; width:auto; display:block; border-radius:3px;}
+  nav ul{list-style:none; display:flex; gap:14px; margin:0; padding:0;}
+  nav ul li{display:flex; align-items:center;}
+  nav ul li:not(:last-child)::after{content:"|"; margin-left:14px; color:var(--line); font-weight:400;}
+  nav a{text-decoration:none; color:var(--ink-dim); font-size:.9rem; font-weight:500; transition:color .2s;}
+  nav a:hover{color:var(--ink);}
+  nav a.current{color:var(--amber);}
+
+  .nav-toggle{
+    display:none; align-items:center; justify-content:center; gap:3px;
+    width:38px; height:38px; padding:0;
+    border:1px solid var(--line); border-radius:50%;
+    background:var(--bg-2); cursor:pointer;
+  }
+  .nav-toggle span{display:block; width:3px; border-radius:3px; background:var(--amber); transition:transform .25s ease, height .25s ease, opacity .2s ease;}
+  .nav-toggle span:nth-child(1){height:8px;}
+  .nav-toggle span:nth-child(2){height:15px;}
+  .nav-toggle span:nth-child(3){height:10px;}
+  .nav-toggle[aria-expanded="true"]{border-color:var(--amber);}
+  .nav-toggle[aria-expanded="true"] span{position:relative; height:15px; background:var(--amber);}
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){transform:rotate(45deg) translate(3px,0);}
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){transform:rotate(-45deg) translate(3px,0);}
+
+  /* ---------- page hero ---------- */
+  .page-hero{
+    position:relative;
+    padding:13vh 6vw 8vh;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .page-hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      linear-gradient(115deg, transparent 42%, rgba(213,113,60,0.14) 48%, rgba(213,113,60,0.04) 52%, transparent 58%),
+      linear-gradient(65deg, transparent 60%, rgba(123,134,232,0.1) 66%, transparent 74%);
+    pointer-events:none;
+  }
+  .page-hero .kicker{position:relative; color:var(--amber); font-weight:600; font-size:.92rem; letter-spacing:.02em; margin:0 0 20px;}
+  .page-hero h1{
+    position:relative;
+    font-weight:700;
+    font-size:clamp(2rem, 4.6vw, 3.2rem);
+    line-height:1.2;
+    margin:0 0 18px;
+  }
+  .page-hero p{position:relative; max-width:60ch; color:var(--ink-dim); font-size:1.02rem; margin:0;}
+
+  /* ---------- section shell ---------- */
+  section{padding:11vh 6vw;}
+  .section-head{max-width:640px; margin-bottom:48px;}
+  .section-head .kicker{color:var(--amber); font-weight:600; font-size:.88rem; margin:0 0 12px;}
+  .section-head h2{font-size:clamp(1.6rem, 3vw, 2.3rem); font-weight:700; margin:0 0 14px; line-height:1.3;}
+  .section-head .desc{color:var(--ink-dim); max-width:58ch;}
+
+  /* ---------- workflow steps ---------- */
+  .workflow{border-bottom:1px solid var(--line);}
+  .step-list{display:flex; flex-direction:column; border-top:1px solid var(--line);}
+  .step-row{
+    display:grid; grid-template-columns:110px minmax(0,1fr) minmax(0,1.3fr); gap:24px;
+    padding:30px 0; border-bottom:1px solid var(--line);
+    align-items:start;
+  }
+  .step-num{font-family:'Oswald', sans-serif; color:var(--amber); font-size:1.6rem; font-weight:600; line-height:1;}
+  .step-title{margin:2px 0 0; font-weight:700; font-size:1.08rem; line-height:1.5;}
+  .step-desc{color:var(--ink-dim); font-size:.92rem; min-width:0;}
+  .step-desc p{margin:0 0 8px;}
+  .step-desc p:last-child{margin-bottom:0;}
+  @media (max-width:760px){
+    .step-row{grid-template-columns:1fr; gap:8px;}
+    .step-num{font-size:1.3rem;}
+  }
+
+  /* ---------- gallery ---------- */
+  .gallery{border-bottom:1px solid var(--line);}
+  .gallery-part{max-width:820px; margin-bottom:56px;}
+  .gallery-part:last-child{margin-bottom:0;}
+  .gallery-part-title{
+    display:flex; align-items:baseline; gap:10px;
+    margin:0 0 16px; font-weight:600; font-size:1rem;
+  }
+  .gallery-part-title .disp{color:var(--amber); font-size:1.1rem; letter-spacing:.03em;}
+  .gallery-part-title .cat{color:var(--ink); font-size:.95rem; font-weight:600;}
+
+  .slideshow-empty{display:flex; align-items:center; justify-content:center;}
+  .slideshow-empty .empty-msg{margin:0; color:var(--ink-dim); font-size:.9rem;}
+
+  .slideshow{
+    position:relative;
+    aspect-ratio:16/9;
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .slideshow-track{display:flex; width:100%; height:100%; transition:transform .4s ease;}
+  .slide{flex:0 0 100%; height:100%;}
+  .slide img{width:100%; height:100%; object-fit:cover; display:block;}
+
+  .slide-nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:40px; height:40px; border-radius:50%;
+    border:1px solid var(--line);
+    background:rgba(21,23,27,0.75);
+    color:var(--ink); font-size:1.3rem; line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    transition:background .2s ease, border-color .2s ease, color .2s ease;
+  }
+  .slide-nav:hover{background:var(--amber); color:#181410; border-color:transparent;}
+  .slide-nav.prev{left:12px;}
+  .slide-nav.next{right:12px;}
+
+  .slide-counter{
+    position:absolute; bottom:12px; right:14px;
+    font-family:'Oswald', sans-serif; font-size:.85rem;
+    color:var(--ink);
+    background:rgba(21,23,27,0.75);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:4px 10px;
+  }
+  @media (max-width:600px){
+    .slide-nav{width:34px; height:34px; font-size:1.1rem;}
+  }
+
+  /* ---------- video ---------- */
+  .video-section{border-bottom:1px solid var(--line);}
+  .video-wrap{max-width:820px;}
+  .video-wrap video{
+    width:100%; display:block;
+    background:#000;
+    border:1px solid var(--line);
+    border-radius:2px;
+  }
+
+  /* ---------- cta ---------- */
+  .cta{text-align:center; border-bottom:1px solid var(--line);}
+  .cta h2{font-size:clamp(1.4rem, 3vw, 2rem); margin:0 0 16px; font-weight:700;}
+  .cta p{color:var(--ink-dim); max-width:52ch; margin:0 auto 28px;}
+  .cta-actions{display:flex; gap:16px; justify-content:center; flex-wrap:wrap;}
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:14px 26px; border-radius:2px;
+    text-decoration:none; font-weight:600; font-size:.95rem;
+    border:1px solid transparent;
+    transition:transform .15s ease, background .2s ease, border-color .2s ease;
+  }
+  .btn-primary{background:var(--amber); color:#181410;}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-ghost{border-color:var(--line); color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--amber);}
+
+  footer{
+    padding:6vh 6vw;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;
+    color:var(--ink-dim); font-size:.85rem;
+  }
+  footer a{color:var(--amber); text-decoration:none;}
+
+  @media (max-width:860px){
+    .nav-toggle{display:flex;}
+    nav#site-nav{
+      display:block; position:absolute; top:100%; left:0; right:0;
+      background:var(--bg); border-bottom:1px solid var(--line);
+      max-height:0; overflow:hidden; transition:max-height .3s ease;
+    }
+    nav#site-nav.open{max-height:320px;}
+    nav#site-nav ul{flex-direction:column; gap:0; padding:8px 6vw 18px;}
+    nav#site-nav ul li{padding:12px 0; border-bottom:1px solid var(--line);}
+    nav#site-nav ul li:last-child{border-bottom:none;}
+    nav#site-nav ul li:not(:last-child)::after{display:none;}
+    header{position:relative;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="brand"><img src="images/logo-header.png" alt="STAGE FLUX 로고" style="height:38px;"></a>
+  <nav id="site-nav">
+    <ul>
+      <li><a href="index.html#about">소개</a></li>
+      <li><a href="index.html#services">서비스</a></li>
+      <li><a href="workflow.html" class="current">WORKFLOW</a></li>
+      <li><a href="index.html#contact">문의</a></li>
+    </ul>
+  </nav>
+  <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<section class="page-hero">
+  <p class="kicker">WORKFLOW</p>
+  <h1>문의부터 철수까지,<br>STAGE FLUX가 진행하는 방식</h1>
+  <p>공연 규모와 상관없이 같은 기준으로 움직입니다. 상담부터 디자인, 설치, 큐 프로그래밍, 라이브 오퍼레이팅, 철수까지 전 과정을 직접 책임집니다.</p>
+</section>
+
+<section class="workflow">
+  <div class="section-head">
+    <p class="kicker">PROCESS</p>
+    <h2>진행 순서</h2>
+    <p class="desc">공연 일정과 규모에 따라 세부 순서는 조정될 수 있습니다.</p>
+  </div>
+  <div class="step-list">
+    <div class="step-row">
+      <span class="step-num disp">01</span>
+      <h3 class="step-title">문의 &amp; 상담</h3>
+      <div class="step-desc">
+        <p>공연 일정, 장소, 규모, 예산을 확인하고 필요한 서비스 범위를 함께 정리합니다.</p>
+        <p>전화, 이메일, 인스타그램 DM 어느 채널로든 문의 가능합니다.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <span class="step-num disp">02</span>
+      <h3 class="step-title">현장 답사 &amp; 조명 디자인</h3>
+      <div class="step-desc">
+        <p>공연장 도면과 현장 조건을 확인하고, 연출 콘셉트에 맞는 컬러 스키마와 픽스처 레이아웃을 설계합니다.</p>
+        <p>견적과 진행 일정을 함께 확정합니다.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <span class="step-num disp">03</span>
+      <h3 class="step-title">장비 세팅 &amp; 시스템 구축</h3>
+      <div class="step-desc">
+        <p>트러스/바텐 설치, 픽스처 배치, DMX 신호 라인과 전력 분전반까지 현장에 맞춰 직접 시공합니다.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <span class="step-num disp">04</span>
+      <h3 class="step-title">큐 프로그래밍 &amp; 리허설</h3>
+      <div class="step-desc">
+        <p>연출 순서에 맞춰 씬을 프로그래밍하고, 리허설에서 음향·영상과의 싱크를 정밀하게 맞춥니다.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <span class="step-num disp">05</span>
+      <h3 class="step-title">라이브 오퍼레이팅</h3>
+      <div class="step-desc">
+        <p>본 공연 동안 현장의 흐름에 맞춰 실시간으로 큐잉하며, 돌발 상황에도 즉각 대응합니다.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <span class="step-num disp">06</span>
+      <h3 class="step-title">철수 &amp; 마무리</h3>
+      <div class="step-desc">
+        <p>공연 종료 후 장비를 안전하게 철수하고, 필요 시 진행 결과에 대한 피드백을 공유합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery" id="gallery">
+  <div class="section-head">
+    <p class="kicker">ON SITE</p>
+    <h2>현장 사진</h2>
+    <p class="desc">STAGE FLUX가 진행한 공연·축제·행사 현장의 모습입니다. 화살표를 눌러 넘겨보실 수 있습니다.</p>
+  </div>
+
+  <div class="gallery-part">
+    <h3 class="gallery-part-title"><span class="disp">PART 1</span><span class="cat">공연</span></h3>
+    <div class="slideshow" data-slideshow>
+      <div class="slideshow-track">
+          <div class="slide"><img src="images/performance-01.jpg" alt=""></div>
+          <div class="slide"><img src="images/performance-02.jpg" alt=""></div>
+          <div class="slide"><img src="images/performance-03.jpg" alt=""></div>
+          <div class="slide"><img src="images/performance-04.jpg" alt=""></div>
+          <div class="slide"><img src="images/performance-05.jpg" alt=""></div>
+          <div class="slide"><img src="images/performance-06.png" alt=""></div>
+          <div class="slide"><img src="images/performance-07.jpg" alt=""></div>
+          <div class="slide"><img src="images/performance-08.png" alt=""></div>
+          <div class="slide"><img src="images/performance-09.jpg" alt=""></div>
+          <div class="slide"><img src="images/performance-10.jpg" alt=""></div>
+          <div class="slide"><img src="images/performance-11.png" alt=""></div>
+          <div class="slide"><img src="images/performance-12.png" alt=""></div>
+      </div>
+      <button class="slide-nav prev" type="button" aria-label="이전 사진">‹</button>
+      <button class="slide-nav next" type="button" aria-label="다음 사진">›</button>
+      <div class="slide-counter"><span class="current">1</span> / <span class="total">12</span></div>
+    </div>
+  </div>
+
+  <div class="gallery-part">
+    <h3 class="gallery-part-title"><span class="disp">PART 2</span><span class="cat">축제</span></h3>
+    <div class="slideshow" data-slideshow>
+      <div class="slideshow-track">
+          <div class="slide"><img src="images/festival-01.jpg" alt=""></div>
+          <div class="slide"><img src="images/festival-02.jpg" alt=""></div>
+          <div class="slide"><img src="images/festival-03.jpg" alt=""></div>
+          <div class="slide"><img src="images/festival-04.jpg" alt=""></div>
+          <div class="slide"><img src="images/festival-05.png" alt=""></div>
+          <div class="slide"><img src="images/festival-06.jpg" alt=""></div>
+          <div class="slide"><img src="images/festival-07.jpg" alt=""></div>
+      </div>
+      <button class="slide-nav prev" type="button" aria-label="이전 사진">‹</button>
+      <button class="slide-nav next" type="button" aria-label="다음 사진">›</button>
+      <div class="slide-counter"><span class="current">1</span> / <span class="total">7</span></div>
+    </div>
+  </div>
+
+  <div class="gallery-part">
+    <h3 class="gallery-part-title"><span class="disp">PART 3</span><span class="cat">행사</span></h3>
+    <div class="slideshow" data-slideshow>
+      <div class="slideshow-track">
+          <div class="slide"><img src="images/event-01.png" alt=""></div>
+          <div class="slide"><img src="images/event-02.png" alt=""></div>
+          <div class="slide"><img src="images/event-03.png" alt=""></div>
+          <div class="slide"><img src="images/event-04.png" alt=""></div>
+          <div class="slide"><img src="images/event-05.jpg" alt=""></div>
+          <div class="slide"><img src="images/event-06.png" alt=""></div>
+          <div class="slide"><img src="images/event-07.jpg" alt=""></div>
+          <div class="slide"><img src="images/event-08.jpg" alt=""></div>
+      </div>
+      <button class="slide-nav prev" type="button" aria-label="이전 사진">‹</button>
+      <button class="slide-nav next" type="button" aria-label="다음 사진">›</button>
+      <div class="slide-counter"><span class="current">1</span> / <span class="total">8</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="video-section" id="video">
+  <div class="section-head">
+    <p class="kicker">VIDEO</p>
+    <h2>현장 영상</h2>
+    <p class="desc">공연 현장의 생생한 모습을 영상으로 확인하세요.</p>
+  </div>
+  <div class="video-wrap">
+    <video controls preload="metadata">
+      <source src="images/workflow-video.mp4" type="video/mp4">
+      브라우저가 video 태그를 지원하지 않습니다.
+    </video>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>공연을 준비 중이신가요?</h2>
+  <p>일정과 장소만 알려주시면 진행 방식과 견적을 안내해드립니다.</p>
+  <div class="cta-actions">
+    <a href="https://www.instagram.com/stage_flux/" target="_blank" rel="noopener" class="btn btn-primary">인스타그램 DM 보내기</a>
+    <a href="index.html" class="btn btn-ghost">메인으로 돌아가기</a>
+  </div>
+</section>
+
+<footer>
+  <span style="display:flex; align-items:center; gap:10px;">
+    <img src="images/logo-icon.jpg" alt="S:FLUX 아이콘" style="height:24px; width:24px; border-radius:50%; display:block;">
+    STAGE FLUX · Stage Lighting &amp; Programming
+  </span>
+  <span><a href="https://www.instagram.com/stage_flux/" target="_blank" rel="noopener">Instagram</a> · <a href="https://blog.naver.com/stageflux" target="_blank" rel="noopener">Blog</a></span>
+  <span>© 2026 STAGE FLUX. All rights reserved.</span>
+</footer>
+
+<button id="scroll-top" class="scroll-top" aria-label="맨 위로 이동">↑</button>
+
+<script>
+  (function initScrollTop(){
+    const btn = document.getElementById('scroll-top');
+    if(!btn) return;
+    function toggle(){
+      if(window.scrollY > 400){
+        btn.classList.add('visible');
+      }else{
+        btn.classList.remove('visible');
+      }
+    }
+    window.addEventListener('scroll', toggle, {passive:true});
+    toggle();
+    btn.addEventListener('click', function(){
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  })();
+
+  (function initNavToggle(){
+    const btn = document.getElementById('nav-toggle');
+    const nav = document.getElementById('site-nav');
+    if(!btn || !nav) return;
+    btn.addEventListener('click', function(){
+      const isOpen = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    nav.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', function(){
+        nav.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  })();
+
+  (function initSlideshows(){
+    document.querySelectorAll('[data-slideshow]').forEach(function(sw){
+      const track = sw.querySelector('.slideshow-track');
+      const slides = sw.querySelectorAll('.slide');
+      const total = slides.length;
+      const prevBtn = sw.querySelector('.slide-nav.prev');
+      const nextBtn = sw.querySelector('.slide-nav.next');
+      const currentEl = sw.querySelector('.slide-counter .current');
+      if(!track || total === 0) return;
+      let index = 0;
+      function update(){
+        track.style.transform = 'translateX(-' + (index * 100) + '%)';
+        if(currentEl) currentEl.textContent = index + 1;
+      }
+      if(prevBtn){
+        prevBtn.addEventListener('click', function(){
+          index = (index - 1 + total) % total;
+          update();
+        });
+      }
+      if(nextBtn){
+        nextBtn.addEventListener('click', function(){
+          index = (index + 1) % total;
+          update();
+        });
+      }
+      update();
+    });
+  })();
+</script>
+</body>
+</html>
